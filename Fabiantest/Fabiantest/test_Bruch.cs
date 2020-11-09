@@ -1,4 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Reflection;
 
 namespace Fabian
 {
@@ -16,7 +18,14 @@ namespace Fabian
         public void test_full_five()
         {
             Bruch test = new Bruch(5);
-            Assert.IsTrue(test.ToString() == "5/1");
+            Assert.IsTrue(test.ToString() == "5");
+        }
+
+        [TestMethod]
+        public void tofloat()
+        {
+            Bruch test = new Bruch(3, 4);
+            Assert.IsTrue(test.ToFloat() == 0.75f);
         }
 
         [TestMethod]
@@ -24,7 +33,6 @@ namespace Fabian
         {
             Bruch test = new Bruch(15, 7);
             Assert.IsTrue(test.ToString() == "2 1/7");
-             
         }
 
         [TestMethod]
@@ -64,11 +72,12 @@ namespace Fabian
         }
 
         [TestMethod]
-        public void four_third_bigger_one_half()
+        public void smaller_bigger()
         {
             Bruch four_third = new Bruch(4, 3);
             Bruch one_half = new Bruch(1, 2);
             Assert.IsTrue(four_third > one_half);
+            Assert.IsTrue(one_half < four_third);
         }
 
         [TestMethod]
@@ -76,7 +85,24 @@ namespace Fabian
         {
             Bruch three_quarter = new Bruch(3, 4);
             Bruch one_half = new Bruch(1, 2);
-            Assert.IsTrue(three_quarter - one_half == one_half);
+            Bruch one_quarter = new Bruch(1, 4);
+            Assert.IsTrue(three_quarter - one_half == one_quarter);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(DivideByZeroException))]
+        public void zero_divisor_should_throw()
+        {
+            new Bruch(3, 0);
+        }
+
+        [TestMethod]
+        public void negative_divisor_equals_negative_dividend()
+        {
+            Bruch negative_divisor = new Bruch(3, -4);
+            Bruch negative_dividend = new Bruch(-3, 4);
+            Assert.IsTrue(negative_dividend == negative_divisor);
+            Assert.IsFalse(negative_divisor == new Bruch(3, 4));
         }
     }
 }
